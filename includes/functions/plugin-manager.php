@@ -35,15 +35,26 @@ function runBlacklistPluginActivation() {
           // Define the environment name
           $current_environment_name = get_sub_field('environment_name');
 
+          /**
+           * Check for plugin deactivation POST
+           */
+          if (isset($_GET['action']) && $_GET['action'] === 'deactivate') :
+            if (isset($_GET['plugin'])):
+              add_sub_row('environment_blacklisted_plugins', ['environment_blacklisted_plugin_name' => $_GET['plugin']]);
+            endif;
+          endif;
+
           // Get the plugins listed on the current environments blacklist
           if(have_rows('environment_blacklisted_plugins')):
 
             // Define the current environments blacklisted plugins array
             $current_environment_blacklisted_plugins = array();
 
-            // Add the blacklisted plugins to the array
             while (have_rows('environment_blacklisted_plugins')) : the_row();
+
+              // Add the blacklisted plugins to the array
               $current_environment_blacklisted_plugins[] = get_sub_field('environment_blacklisted_plugin_name');
+
             endwhile;
 
           endif;
@@ -68,11 +79,6 @@ function runBlacklistPluginActivation() {
 
     // Remove the already active plugins from the global plugin list
     $environment_enabled_plugins = array_diff($environment_enabled_plugins, get_option('active_plugins'));
-
-    echo '<hr><h1>Active Plugins.</h1><p>';
-    echo '</p><hr><p>';
-    print_r($environment_enabled_plugins);
-    echo '</p>';
 
     // Deactivate the blacklisted plugins
     deactivate_plugins($current_environment_blacklisted_plugins);

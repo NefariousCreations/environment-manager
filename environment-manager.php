@@ -28,7 +28,7 @@ $myUpdateChecker->setBranch('master');
  *
  * @since 0.1.0
  */
-function _environment_manger() {
+add_action( 'plugins_loaded', function () {
 
   // Get the plugin path
   $plugin_path = plugin_dir_path( __FILE__ );
@@ -36,7 +36,14 @@ function _environment_manger() {
   // Functions
   require_once $plugin_path . '/includes/functions/plugin-manager.php';
 
+  // Options Page
   require_once $plugin_path . '/includes/options-pages/environment-manager.php';
 
-}
-add_action( 'plugins_loaded', '_environment_manger' );
+  // Scripts & Styles
+  add_action('admin_enqueue_scripts', function () {
+//    wp_enqueue_style('main.css', plugins_url('resources/assets/styles/main.css', __FILE__));
+    wp_enqueue_script('main.js', plugins_url('resources/assets/scripts/main.js', __FILE__), array('jquery'), true);
+  });
+
+});
+
