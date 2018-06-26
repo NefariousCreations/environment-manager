@@ -1,0 +1,19 @@
+{
+  "name": "NefariousCreations/environment-manager",
+  "type": "wordpress-plugin",
+  "description": "Dynamically control WordPress settings and options across environments at the content level using unique urls.",
+  "homepage": "https://nefariouscreations.com.au",
+  "authors": [
+    {
+      "name": "Corey Crowden",
+      "email": "corey@nefariouscreations.com.au",
+      "homepage": "https://nefariouscreations.com.au"
+    }
+  ],
+  "require": {
+    "php": ">=7.1"
+  },
+  "require-dev": {
+    "yahnis-elsts/plugin-update-checker": "*"
+  }
+}
