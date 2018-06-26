@@ -35,5 +35,8 @@ function _environment_manger() {
 
   // Functions
   require_once $plugin_path . '/includes/functions/plugin-manager.php';
+
+  require_once $plugin_path . '/includes/options-pages/environment-manager.php';
+
 }
 add_action( 'plugins_loaded', '_environment_manger' );
