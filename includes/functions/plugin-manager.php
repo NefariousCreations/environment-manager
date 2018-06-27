@@ -32,15 +32,6 @@ function runBlacklistPluginActivation() {
         // Check for the current environment
         if (get_site_url() === get_sub_field('environment_site_url', 'option')):
 
-          /**
-           * Check for plugin deactivation POST and add deactivated plugin to blacklist
-           */
-          if (isset($_GET['action']) && $_GET['action'] === 'deactivate') :
-            if (isset($_GET['plugin'])):
-              add_sub_row('environment_blacklisted_plugins', ['environment_blacklisted_plugin_name' => $_GET['plugin']]);
-            endif;
-          endif;
-
           // Get the plugins listed on the current environments blacklist
           if(have_rows('environment_blacklisted_plugins')):
 
@@ -130,6 +121,52 @@ add_action( 'activated_plugin', function ($plugin) {
           // If the plugin to be activated is blacklisted, remove it from the blacklist
           if ($plugin_row_to_remove_from_blacklist):
             delete_sub_row('environment_blacklisted_plugins', $plugin_row_to_remove_from_blacklist);
+          endif;
+
+        endif;
+
+      endif;
+
+    endwhile;
+
+  endif;
+
+}, 10, 2 );
+
+
+// -----------------------------------------------------------------------------
+
+/**
+ * Add plugin to the current environment blacklist if the plugin is deactivated
+ */
+add_action( 'deactivated_plugin', function ($plugin) {
+  /**
+   * Import required functions from WordPress Admin
+   */
+  if (! function_exists('get_plugins')) {
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+  }
+
+  /**
+   * Get the plugins from the options page
+   */
+
+  // Check if any environments have been set
+  if(have_rows('environment', 'option')):
+
+    while (have_rows('environment', 'option')) : the_row();
+
+      // Get the type of environment select
+      if(get_row_layout() == 'environment_by_url'):
+
+        // Check for the current environment
+        if (get_site_url() === get_sub_field('environment_site_url', 'option')):
+
+          /**
+           * Check for plugin deactivation POST and add deactivated plugin to blacklist
+           */
+          if ($plugin):
+            add_sub_row('environment_blacklisted_plugins', ['environment_blacklisted_plugin_name' => $plugin]);
           endif;
 
         endif;
