@@ -36,11 +36,32 @@ function runBlacklistPluginActivation() {
           $current_environment_name = get_sub_field('environment_name');
 
           /**
-           * Check for plugin deactivation POST
+           * Check for plugin deactivation POST and add deactivated plugin to blacklist
            */
           if (isset($_GET['action']) && $_GET['action'] === 'deactivate') :
             if (isset($_GET['plugin'])):
               add_sub_row('environment_blacklisted_plugins', ['environment_blacklisted_plugin_name' => $_GET['plugin']]);
+            endif;
+          endif;
+
+          /**
+           * Check for plugin activation POST and remove activated plugin from blacklist
+           */
+          if (isset($_GET['action']) && $_GET['action'] === 'activate') :
+            if (isset($_GET['plugin'])):
+
+              // Get the index (ID) of the rows for the plugin that is to be activated
+              while(have_rows('environment_blacklisted_plugins')): the_row();
+                if ($_GET['plugin'] === get_sub_field('environment_blacklisted_plugin_name')):
+                  $plugin_row_to_remove_from_blacklist = get_row_index();
+                endif;
+              endwhile;
+
+              // If the plugin to be activated is blacklisted, remove it from the blacklist
+              if ($plugin_row_to_remove_from_blacklist):
+                delete_sub_row('environment_blacklisted_plugins', $plugin_row_to_remove_from_blacklist);
+              endif;
+
             endif;
           endif;
 
