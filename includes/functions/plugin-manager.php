@@ -59,6 +59,22 @@ function runBlacklistPluginActivation() {
 
           endif;
 
+          /**
+           * Disable Blacklisted Plugins And force Enable others Only if a current Environment is Active
+           */
+
+          // Remove the black listed plugins from global plugin list
+          $environment_enabled_plugins = array_diff(array_keys(get_plugins()), $current_environment_blacklisted_plugins);
+
+          // Remove the already active plugins from the global plugin list
+          $environment_enabled_plugins = array_diff($environment_enabled_plugins, get_option('active_plugins'));
+
+          // Deactivate the blacklisted plugins
+          deactivate_plugins($current_environment_blacklisted_plugins);
+
+          // Enable all plugins except those on the blacklist
+          activate_plugins($environment_enabled_plugins);
+
         endif;
 
       endif;
@@ -66,34 +82,6 @@ function runBlacklistPluginActivation() {
     endwhile;
 
   endif;
-
-  /**
-   * Disable Blacklisted Plugins
-   */
-
-  // If a current environment is defined
-  if ($current_environment_name) {
-
-    // Remove the black listed plugins from global plugin list
-    $environment_enabled_plugins = array_diff(array_keys(get_plugins()), $current_environment_blacklisted_plugins);
-
-    // Remove the already active plugins from the global plugin list
-    $environment_enabled_plugins = array_diff($environment_enabled_plugins, get_option('active_plugins'));
-
-    // Deactivate the blacklisted plugins
-    deactivate_plugins($current_environment_blacklisted_plugins);
-
-    // Enable all plugins except those on the blacklist
-    activate_plugins($environment_enabled_plugins);
-
-
-  } else {
-
-    // If the current environment can't be identified activate all plugins
-    $environment_enabled_plugins = array_diff(array_keys(get_plugins()), get_option('active_plugins'));
-    activate_plugins($environment_enabled_plugins);
-
-  }
 
 }
 
