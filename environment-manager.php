@@ -3,7 +3,7 @@
 Plugin Name: Environment Manager by Nefarious Creations
 Plugin URI: https://nefariouscreations.com.au
 Description: Dynamically control WordPress settings and options across environments at the content level using unique urls.
-Version: 0.1.0
+Version: 0.1.1
 Author: Nefarious Creations
 Author URI: https://nefariouscreations.com.au
 */
